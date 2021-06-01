@@ -1,7 +1,15 @@
+    
 .espace {
     margin: 1em;
     padding: 1em;
     overflow: hidden;
+}
+
+.fondBlanc {
+    background-color: #fff;
+    width: 100%;
+    z-index: 100;
+    padding: 0.2em;
 }
 
 .card-body {
