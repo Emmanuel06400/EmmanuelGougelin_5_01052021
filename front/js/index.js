@@ -1,8 +1,7 @@
 
-main()//Fonction principale qui appelle les fonction des l'ouverture de la page de manière asynchrone
-async function main() {
-    getArticles()
-}
+
+getArticles()
+
 
 function getArticles() { //appel api, callback, ... return une promesse
     return fetch("http://localhost:3000/api/teddies/")
@@ -10,16 +9,20 @@ function getArticles() { //appel api, callback, ... return une promesse
             let myJSON_promise = response.json();
             return myJSON_promise
         })
+        .then(function(myJSON) {//J'emboite les fonctions avec la méthode .then
+            showArticles(myJSON)
+            }
+        )
         .catch(function(error) {//fonction qui affiche une pop up en cas d'erreur
-            alert(Error)
+            console.log(Error)
         })
-    }
+}
 
 function showArticles(myJSON) {
     for (let i = 0; i < myJSON.length; i++) { //Avec une boucle for je créé une structure HTML etj'affiche les teddys 
 
                 let linkTeddy = document.createElement('a');//lien vers le produit
-                linkTeddy.classList.add('lienOurs');//ajout de class 
+                linkTeddy.classList.add('linkTeddy');//ajout de class 
                 linkTeddy.setAttribute('href', 'HTML/produit.html?id=' + myJSON[i]._id);//ajout d'atribut' 
 
                 let boxTeddy = document.createElement('div');//
@@ -53,10 +56,7 @@ function showArticles(myJSON) {
                 //J'affiche le toutdans la div boxListingTeddy
                 boxListingTeddy.appendChild(linkTeddy);
             }
-        }
+}
+    
 
-getArticles().then(function(myJSON) {//J'emboite les fonctions avec la méthode .then
-    showArticles(myJSON)
-    }
-);
 
