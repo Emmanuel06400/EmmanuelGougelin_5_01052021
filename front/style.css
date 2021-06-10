@@ -1,8 +1,65 @@
     
+body {
+	margin: 0;
+	min-height: 100vh;
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+    background: 
+      radial-gradient(rgba(254, 216, 216, 0.844) 3px, transparent 4px),
+      radial-gradient(rgb(174, 172, 172) 3px, transparent 4px),
+      linear-gradient(#fff 4px, transparent 0),
+      linear-gradient(45deg, transparent 74px, transparent 75px, #a4a4a4 75px, #a4a4a4 76px, transparent 77px, transparent 109px),
+      linear-gradient(-45deg, transparent 75px, transparent 76px, #a4a4a4 76px, #a4a4a4 77px, transparent 78px, transparent 109px),
+    #fff;
+    background-size: 109px 109px, 109px 109px,100% 6px, 109px 109px, 109px 109px;
+    background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  }
+
+.secondTitle {
+    z-index: 1;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    padding-top: 50px;
+    mix-blend-mode: overlay;
+
+  }
+
+.navbar-light .navbar-toggler {
+    border-color: #f8f9fa;
+    background-color: #ffffff4a;
+}
+
+
+.card {
+    overflow: hidden;
+}
+
+.card div {
+    overflow: hidden;
+}
+/*---------index---------*/
+
+#boxListingTeddy {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.linkTeddy {
+    color: #540606;
+    text-decoration: none;
+    display:contents;
+}
+
+.carousel {
+    border-color: #540606 3px;
+}
+
 .espace {
     margin: 1em;
     padding: 1em;
     overflow: hidden;
+    width: 40%;
 }
 
 .fondBlanc {
@@ -10,10 +67,6 @@
     width: 100%;
     z-index: 100;
     padding: 0.2em;
-}
-
-.card-body {
-    z-index: 1;
 }
 
 
@@ -38,14 +91,37 @@
     color: #c2a2a2!important;
 }
 
-body {
-    background: 
-      radial-gradient(rgba(254, 216, 216, 0.844) 3px, transparent 4px),
-      radial-gradient(rgb(174, 172, 172) 3px, transparent 4px),
-      linear-gradient(#fff 4px, transparent 0),
-      linear-gradient(45deg, transparent 74px, transparent 75px, #a4a4a4 75px, #a4a4a4 76px, transparent 77px, transparent 109px),
-      linear-gradient(-45deg, transparent 75px, transparent 76px, #a4a4a4 76px, #a4a4a4 77px, transparent 78px, transparent 109px),
-    #fff;
-    background-size: 109px 109px, 109px 109px,100% 6px, 109px 109px, 109px 109px;
-    background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
-  }
+    
+
+  #formulaire_contact input {
+    width: 100%;
+}
+/*---------footer---------*/
+
+.text-light {
+    FONT-SIZE: smaller;
+}
+
+/*---------panier---------*/
+
+
+
+#panier .card {
+    flex-direction: row;
+    margin: 23px;
+
+}
+
+#panier img {
+    width: 200px;
+    margin-right: 10px;
+    object-fit: cover;
+
+}
+
+
+/*---------produit---------*/
+
+.col-8 .card {
+    margin-top: 10px;
+}

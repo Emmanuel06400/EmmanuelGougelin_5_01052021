@@ -1,8 +1,8 @@
 
-
+//appel de la fonction 
 getArticles()
 
-
+//Fonction pour récupérer les articles dans le server
 function getArticles() { //appel api, callback, ... return une promesse
     return fetch("http://localhost:3000/api/teddies/")
         .then(function(response) { //fonction prend pour parametre response et return response.json via la variable myJSON_promise
@@ -11,6 +11,7 @@ function getArticles() { //appel api, callback, ... return une promesse
         })
         .then(function(myJSON) {//J'emboite les fonctions avec la méthode .then
             showArticles(myJSON)
+            console.log(myJSON)
             }
         )
         .catch(function(error) {//fonction qui affiche une pop up en cas d'erreur
@@ -18,12 +19,13 @@ function getArticles() { //appel api, callback, ... return une promesse
         })
 }
 
+//Fonction pour structurer la page html
 function showArticles(myJSON) {
     for (let i = 0; i < myJSON.length; i++) { //Avec une boucle for je créé une structure HTML etj'affiche les teddys 
 
                 let linkTeddy = document.createElement('a');//lien vers le produit
                 linkTeddy.classList.add('linkTeddy');//ajout de class 
-                linkTeddy.setAttribute('href', 'HTML/produit.html?id=' + myJSON[i]._id);//ajout d'atribut' 
+                linkTeddy.setAttribute('href', 'HTML/produit.html?id=' + myJSON[i]._id);//ajout d'atribut
 
                 let boxTeddy = document.createElement('div');//
                 boxTeddy.classList.add("card","espace","zoom");
@@ -38,7 +40,7 @@ function showArticles(myJSON) {
                 let boxFeatureTeddy = document.createElement('div');
                 boxFeatureTeddy.classList.add('boxFeatureTeddy');
 
-                let nameTeddy = document.createElement('h2');
+                let nameTeddy = document.createElement('h3');
                 nameTeddy.classList.add("card-title","fondBlanc",".card-body");
                 nameTeddy.textContent = myJSON[i].name;
 
@@ -53,7 +55,7 @@ function showArticles(myJSON) {
                 boxTeddy.appendChild(boxFeatureTeddy);
                 linkTeddy.appendChild(boxTeddy);
 
-                //J'affiche le toutdans la div boxListingTeddy
+                //J'affiche le tout dans la div boxListingTeddy
                 boxListingTeddy.appendChild(linkTeddy);
             }
 }

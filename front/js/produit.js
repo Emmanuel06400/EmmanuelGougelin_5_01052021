@@ -1,4 +1,5 @@
-function $_GET(param) {//Fonction pour récupérer les paramètre dans l'URL
+//Fonction pour récupérer les paramètre dans l'URL
+function $_GET(param) {
 	var vars = {};
 	window.location.href.replace( location.hash, '' ).replace( 
 		/[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
@@ -13,18 +14,17 @@ function $_GET(param) {//Fonction pour récupérer les paramètre dans l'URL
 	return vars;
 }
 
-function getArticlesWithId() {// Fonction pour récuperer les articles via leurs id
+// Fonction pour récuperer les articles via leurs id
+function getArticlesWithId() {
     return fetch("http://localhost:3000/api/teddies/" + $_GET('id')) 
     .then(function(response) { //fonction pour nous retourné les données
         let myJSON_promise = response.json();// transforme les données en format json
         return myJSON_promise
     })
-    .then(function(myJSON) {
-        showArticlesSelected(myJSON);
-        })
 }
 
-function showArticlesSelected(myJSON) {// Fonction qui affiche l'article sélectionné
+// Fonction qui affiche l'article sélectionné
+function showArticlesSelected(myJSON) {
         let price_teddy = document.createTextNode(myJSON.price + " euros");//je créé une variable pour afficher les données
         let name_teddy = document.createTextNode(myJSON.name);
         let image_teddy = myJSON.imageUrl;
@@ -77,25 +77,18 @@ function showArticlesSelected(myJSON) {// Fonction qui affiche l'article sélect
         tableau.push(nouvelArticle);
         localStorage.setItem("panier", JSON.stringify(tableau));
     }
-      
   }
 
-  function ajoutArticlePanier() { 
-    fetch("http://localhost:3000/api/teddies/" + $_GET('id')) // J'affiche les informations du teddy selon la key id de l'URL
-        .then(function(response) { //fonction pour nous retourné les données
-        let myJSON_promise = response.json();//Je transforme les données en format json
-        return myJSON_promise
-            })
+// La fonction pour générer les articles est appelé après avoir recuperer l'ID de l'article sélectionné
+getArticlesWithId().then(function(myJSON) {
+    showArticlesSelected(myJSON); 
+    console.log(myJSON)
+})
+
+//Au click la fonction d'ajout au panier s'active
+document.getElementById("btn_ajout_panier").onclick = function() {
+    getArticlesWithId()
         .then(function(myJSON) {
-            addNewArticle(myJSON)//Fonction ajouté un nouvel article dans le panier
-                
-            })
-        }
-
-    document.getElementById("btn_ajout_panier").onclick = function() {ajoutArticlePanier()};//Au click la fonction d'ajout au panier s'active
-    
-    getArticlesWithId()//Appelle de la fonction
-
-        
-
-
+            addNewArticle(myJSON)
+        })
+};
