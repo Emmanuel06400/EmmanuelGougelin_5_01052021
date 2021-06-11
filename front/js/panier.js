@@ -115,6 +115,7 @@ afichherFotmulaireHtml();
 const btnEnvoyerFormulaire = document.querySelector("#confirmPanier");
 
 //--------------addEnventListener-------------//
+
 btnEnvoyerFormulaire.addEventListener("click", (e)=>{
 e.preventDefault();
 
@@ -128,13 +129,75 @@ class Formulaire {
     this.adress = document.querySelector("#adress").value;
     }
 }
+
 //Appel de l'instance de classe Formulaire pour créer l'objet formulaireValues
 const formulaireValues = new Formulaire();
-
 console.log(formulaireValues)
 
-//Mettre l'objet "formulaireValues" dans le localStorage
-localStorage.setItem("formulaireValues",JSON.stringify(formulaireValues));
+//********************Gestion validation du formulaire************** */
+const textAlert = (value) => {
+    return value + `${value} : Les chiffres et symboles ne sont pas autorisés \n Ne pas dépaser 20 caractères`;
+}
+
+const regExNameFirstnameCity = (value) => {
+return /^[A-Za-z]{3,20}$/.test(value)
+};
+
+const regExEmail = (value) => {
+    return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
+    };
+
+
+function nomControle(){
+//Contrôle de la validité du nom
+const leNom = formulaireValues.lastName;
+if(regExNameFirstnameCity(leNom)){
+return true;
+}else{
+    alert(textAlert("Nom"))
+    return false;
+    };
+};
+function prenomControle(){
+    //Contrôle de la validité du prenom
+    const lePrenom = formulaireValues.firstName;
+    if(regExNameFirstnameCity(lePrenom)){
+    return true;
+    }else{
+        alert(textAlert("Prénom"))
+        return false;
+        };
+    };
+function villeControle(){
+    //Contrôle de la validité du ville
+    const laVille = formulaireValues.city;
+    if(regExNameFirstnameCity(laVille)){
+    return true;
+    }else{
+        alert(textAlert("Ville"))
+        return false;
+        };
+    };
+function emailControle(){
+    //Contrôle de la validité du email
+    const leEmail = formulaireValues.adress;
+    if(regExEmail(leEmail)){
+    return true;
+    }else{
+        alert("l'email n'est pas valide")
+        return false;
+        };
+    };
+
+//Contrôle la validité avant envoir au local storage
+if(nomControle() && prenomControle() && villeControle() && emailControle()){
+    //Mettre l'objet "formulaireValues" dans le localStorage
+    localStorage.setItem("formulaireValues",JSON.stringify(formulaireValues));
+    } else{
+        alert("Veuillez bien remplir le formulaire");
+    };
+
+//********************FIN Gestion validation du formulaire************** */
 
 //Mettre les values du formulaire et les produits sélectionnés dans un objets à envoyer vers le serveur
 const aEnvoyer = {
@@ -152,26 +215,30 @@ const promise01 = fetch("https://restapi.fr/api/Test", { //"http://jsonplacehold
 });
 
 //Pour voir le resultat du serveur dans la console ( A verifier )
-promise01.then(async(Response)=>{
+promise01.then(async(response)=>{
+    //Si la promesse n'est pas résolu, est rejeté, Gestions des erreurs
     try{
-        const contenu = await Response.json();
+        const contenu = await response.json();
+        console.log(contenu);
+
+        if(response.ok) {
+            console.log(`Resultat de response.ok : ${response.ok}`);
+        } else{
+            console.log(`Resultat du serveur : ${response.status}`);
+            alert(`Probème avec le serveur : erreur ${response.status}`)
+        };
 
     }catch(e){
         console.log(e);
-    }
-})
-//Pour voir ce qu'il y a réellement dans le serveur
-const promise02 = fetch("https://restapi.fr/api/Test")  
-    promise02.then(async(Response)=>{
-        try{
-            console.log(promise02);
-            const donneSurServeur = await Response.json()
-            console.log(donneSurServeur);
-        } catch(e) {
-            console.log(e);
-        }
-    })
+        console.log("erreur qui vient du catche");
+        console.log(e);
+        alert(`ERREUR qui vient du catch() ${e} `);
+    };
 });
+
+});
+
+//--------------fin addEnventListener-------------//
 
 
 
