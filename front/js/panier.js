@@ -16,7 +16,7 @@ basket()//Appel de la fonction
 function GetAriclesBasket(line,i) {
     //Création des textNode
     var newName = document.createTextNode(line.name);
-    var newPrice = document.createTextNode("Prix : " + line.price/100 + " euros");
+    var newPrice = document.createTextNode("Prix : " + line.price + " euros");
     var newColor = document.createTextNode("Couleur : " + line.color);
     var newCount = document.createTextNode("Quantité : " + line.quantity);
     var priceLine = line.quantity * line.price;
@@ -64,7 +64,7 @@ function totalPriceTeddy() {
     totalPrice = priceTableau.reduce(reducer); 
     document.getElementById("montantTotal").insertAdjacentHTML("beforeend", totalPrice/100 + " euros")
 }
-//TEST FORMULAIRE DU COMMANDE///////////////////////////////
+// FORMULAIRE DE COMMANDE///////////////////////////////
 
 const afichherFotmulaireHtml = () => {
     //Sélection élément du DOM
@@ -178,7 +178,7 @@ function villeControle(){
         return false;
         };
     };
-function emailControle(){
+/*function emailControle(){
     //Contrôle de la validité du email
     const leEmail = formulaireValues.adress;
     if(regExEmail(leEmail)){
@@ -187,12 +187,13 @@ function emailControle(){
         alert("l'email n'est pas valide")
         return false;
         };
-    };
+    };*/
 
 //Contrôle la validité avant envoir au local storage
-if(nomControle() && prenomControle() && villeControle() && emailControle()){
+if(nomControle() && prenomControle() && villeControle()){
     //Mettre l'objet "formulaireValues" dans le localStorage
     localStorage.setItem("formulaireValues",JSON.stringify(formulaireValues));
+    localStorage.setItem("prixTotal",JSON.stringify(totalPrice));
     } else{
         alert("Veuillez bien remplir le formulaire");
     };
@@ -207,39 +208,50 @@ const aEnvoyer = {
 }
 console.log(aEnvoyer);
 
-//Envoie de l'objet "aEnvoyer" vers le serveur
-const promise01 = fetch("https://restapi.fr/api/Test", { //"http://jsonplaceholder.typicode.com/users"
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(aEnvoyer),
-});
-
-//Pour voir le resultat du serveur dans la console ( A verifier )
-promise01.then(async(response)=>{
-    //Si la promesse n'est pas résolu, est rejeté, Gestions des erreurs
-    try{
-        const contenu = await response.json();
-        console.log(contenu);
-
-        if(response.ok) {
-            console.log(`Resultat de response.ok : ${response.ok}`);
-        } else{
-            console.log(`Resultat du serveur : ${response.status}`);
-            alert(`Probème avec le serveur : erreur ${response.status}`)
-        };
-
-    }catch(e){
-        console.log(e);
-        console.log("erreur qui vient du catche");
-        console.log(e);
-        alert(`ERREUR qui vient du catch() ${e} `);
-    };
-});
-
+envoieVersServeur(aEnvoyer);
 });
 
 //--------------fin addEnventListener-------------//
 
+function envoieVersServeur(aEnvoyer){
+    //Envoie de l'objet "aEnvoyer" vers le serveur
+const promise01 = fetch("https://restapi.fr/api/Test", { //"http://localhost:3000/api/teddies/order"
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify(aEnvoyer),
+});
+
+//Pour voir le resultat du serveur dans la console ( A verifier )
+promise01.then(async(response)=>{
+//Si la promesse n'est pas résolu, est rejeté, Gestions des erreurs
+try{
+    const contenu = await response.json();
+    console.log(contenu);
+
+    if(response.ok) {
+        console.log(`Resultat de response.ok : ${response.ok}`);
+
+        //Récupération de l'id de la response du serveur
+        console.log(contenu._id);
+        //Mettre l'id dans le local storage
+        localStorage.setItem("responseId", contenu._id);
+
+        //Aller vers la page contirmation.html
+        window.location = "confirmation.html";
+
+    } else{
+        console.log(`Resultat du serveur : ${response.status}`);
+        alert(`Problème avec le serveur : erreur ${response.status}`)
+    };
+
+}catch(e){
+    console.log(e);
+    console.log("erreur qui vient du catche");
+    console.log(e);
+    alert(`ERREUR qui vient du catch() ${e} `);
+};
+});
+}
 
 
 //-------------Mettre le contenu du localStorage dans les champs du formulaire----------------//

@@ -25,7 +25,7 @@ function getArticlesWithId() {
 
 // Fonction qui affiche l'article sélectionné
 function showArticlesSelected(myJSON) {
-        let price_teddy = document.createTextNode(myJSON.price + " euros");//je créé une variable pour afficher les données
+        let price_teddy = document.createTextNode(myJSON.price/100 + " euros");//je créé une variable pour afficher les données
         let name_teddy = document.createTextNode(myJSON.name);
         let image_teddy = myJSON.imageUrl;
         let description_teddy = document.createTextNode(myJSON.description)
@@ -59,7 +59,7 @@ function showArticlesSelected(myJSON) {
 
     let nouvelArticle = new Object() //Création de l'objet teddy selon les paramètres du teddy de la page
     nouvelArticle.name = myJSON.name;
-    nouvelArticle.price = myJSON.price;
+    nouvelArticle.price = myJSON.price/100;
     nouvelArticle.id = myJSON._id;
     nouvelArticle.color = myJSON.colors[teddyCouleur];
     nouvelArticle.quantity = 1;
