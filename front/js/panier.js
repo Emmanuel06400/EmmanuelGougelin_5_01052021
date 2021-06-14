@@ -62,21 +62,19 @@ var totalPrice;
 function totalPriceTeddy() {
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
     totalPrice = priceTableau.reduce(reducer); 
-    document.getElementById("montantTotal").insertAdjacentHTML("beforeend", totalPrice/100 + " euros")
+    document.getElementById("montantTotal").insertAdjacentHTML("beforeend", totalPrice + " euros")
 }
-// FORMULAIRE DE COMMANDE///////////////////////////////
 
+// FORMULAIRE DE COMMANDE///////////////////////////////
 const afichherFotmulaireHtml = () => {
     //Sélection élément du DOM
-    const positionElement = document.querySelector("#containerProduitPanier");
+    const positionElement = document.querySelector("#containerFormulaire");
 
     const structureFormulaire = `
 
-    <div id="formulaire_contact" class="col-12 col-md-6">
-                <p id="montantTotal">Montant total de la commande : </p>
+    <div id="formulaire_contact">
                 <form method="POST">
                     <p><u>Coordonnées de livraison :</u> </p>
-
                     <div>
                         <label for="lastName">Nom : </label> <br>
                         <input type="text" name="user_lastName" id="lastName" required>
@@ -85,8 +83,6 @@ const afichherFotmulaireHtml = () => {
                         <label for="firstName" id="firstName_label">Prénom : </label> <br>
                         <input type="text" name="user_firstName" id="firstName" required>
                     </div>
-
-
                     <div>
                         <label for="email">Adresse e-mail : </label> <br>
                         <input type="email" name="user_email" id="email" required>
@@ -104,8 +100,7 @@ const afichherFotmulaireHtml = () => {
             </div>
             `;
 //injection HTML
-
-    positionElement.insertAdjacentHTML("afterend", structureFormulaire);
+    positionElement.insertAdjacentHTML("afterbegin", structureFormulaire);
 };
 
 //Affichage du formulaire
@@ -120,18 +115,15 @@ btnEnvoyerFormulaire.addEventListener("click", (e)=>{
 e.preventDefault();
 
 //Création : définition d'une classe pour fabriquer l'objet dans lequel iront les values du formulaire
-class Formulaire {
-    constructor(lastName, firstName, email, city, adress){
-    this.lastName = document.querySelector("#lastName").value;
-    this.firstName = document.querySelector("#firstName").value;
-    this.email = document.querySelector("#email").value;
-    this.city = document.querySelector("#city").value;
-    this.adress = document.querySelector("#adress").value;
-    }
-}
 
 //Appel de l'instance de classe Formulaire pour créer l'objet formulaireValues
-const formulaireValues = new Formulaire();
+const formulaireValues = {
+    lastName : document.querySelector("#lastName").value,
+    firstName : document.querySelector("#firstName").value,
+    email : document.querySelector("#email").value,
+    city : document.querySelector("#city").value,
+    address : document.querySelector("#adress").value,
+    };
 console.log(formulaireValues)
 
 //********************Gestion validation du formulaire************** */
@@ -202,9 +194,8 @@ if(nomControle() && prenomControle() && villeControle()){
 
 //Mettre les values du formulaire et les produits sélectionnés dans un objets à envoyer vers le serveur
 const aEnvoyer = {
-    tableau,
-    totalPrice,
-    formulaireValues
+    products: tableau,
+    contact: formulaireValues
 }
 console.log(aEnvoyer);
 
@@ -215,7 +206,7 @@ envoieVersServeur(aEnvoyer);
 
 function envoieVersServeur(aEnvoyer){
     //Envoie de l'objet "aEnvoyer" vers le serveur
-const promise01 = fetch("https://restapi.fr/api/Test", { //"http://localhost:3000/api/teddies/order"
+const promise01 = fetch("http://localhost:3000/api/teddies/order", { //"http://localhost:3000/api/teddies/order"
 method: "POST",
 headers: { "Content-Type": "application/json" },
 body: JSON.stringify(aEnvoyer),

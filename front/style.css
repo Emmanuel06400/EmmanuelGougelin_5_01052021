@@ -1,4 +1,12 @@
-    
+/*---------Toutes les pages---------*/
+.primary-color {
+    background-color: #540606!important;
+}
+
+.secondary-color {
+    color: #c2a2a2!important;
+}
+
 body {
 	margin: 0;
 	min-height: 100vh;
@@ -15,60 +23,62 @@ body {
     background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
   }
 
-.secondTitle {
-    z-index: 1;
-    position: absolute;
-    text-align: center;
-    width: 100%;
-    padding-top: 50px;
-    mix-blend-mode: overlay;
-
-  }
 
 .navbar-light .navbar-toggler {
     border-color: #f8f9fa;
     background-color: #ffffff4a;
 }
+/*---------footer---------*/
 
-
-.card {
-    overflow: hidden;
+.text-light {
+    FONT-SIZE: smaller;
 }
+
+.list-unstyled {
+    font-size: O.5em;
+}
+
+footer h4 {
+    font-size: 1.2em;
+}
+
+/*---------index---------*/
+
+.secondTitle {
+    z-index: 1;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    padding-top: 13px;
+    mix-blend-mode: overlay;
+  }
 
 .card div {
     overflow: hidden;
 }
-/*---------index---------*/
 
 #boxListingTeddy {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
+
 .linkTeddy {
     color: #540606;
     text-decoration: none;
     display:contents;
 }
 
-.carousel {
-    border-color: #540606 3px;
+#carouselExampleControls {
+border-bottom:10px solid #540606;
 }
 
 .espace {
-    margin: 1em;
-    padding: 1em;
+    margin: 0.5em;
+    padding: 6px;
     overflow: hidden;
-    width: 40%;
+    width: 44%;
 }
-
-.fondBlanc {
-    background-color: #fff;
-    width: 100%;
-    z-index: 100;
-    padding: 0.2em;
-}
-
 
 .zoom img {
 	-webkit-transform: scale(1);
@@ -77,34 +87,58 @@ body {
 	transition: 1s ease-in-out;
     overflow: hidden;
 }
+
 .zoom:hover img {
 	-webkit-transform: scale(1.2);
 	transform: scale(1.2);
     overflow: hidden;
 }
 
-.primary-color {
-    background-color: #540606!important;
+@media only screen and (max-width: 375px) {
+    .espace {
+        width: 100%;
+    }   }
+
+    /*---------produit---------*/
+
+.col-8 .card {
+    margin-top: 10px;
 }
 
-.secondary-color {
-    color: #c2a2a2!important;
+#nom_produit {
+    font-size: large;
+    font-weight: 900;
+    font-size: 2em;
 }
 
-    
+#prix_produit {
+    font-size: large;
+    font-weight: 900;
+    color: #fff;
+    background-color: #540606;
+    width: fit-content;
+    padding: 0.4em;
+    border-radius: 1em;
+}
 
-  #formulaire_contact input {
+#btn_ajout_panier, #btn_aller_panier {
+    color: #fff;
+    background-color: #540606;
+    border-color: #540606;
+    margin: 10px;
     width: 100%;
 }
-/*---------footer---------*/
 
-.text-light {
-    FONT-SIZE: smaller;
-}
+@media only screen and (max-width: 570px) {
+    #imageTeddie, #descriptionTeddie {
+        width: 100%;
+    }   }
+
 
 /*---------panier---------*/
-
-
+#main_panier h2 {
+    margin-top: 1em;
+}
 
 #panier .card {
     flex-direction: row;
@@ -116,12 +150,69 @@ body {
     width: 200px;
     margin-right: 10px;
     object-fit: cover;
-
 }
 
+#formulaire_contact input {
+    width: 100%;
+}
 
-/*---------produit---------*/
+#montantTotal {
+    color: #fff;
+    background-color: #540606;
+    width: fit-content;
+    padding: 0.4em;
+    border-radius: 1em;
+    margin: auto;
+}
 
-.col-8 .card {
-    margin-top: 10px;
+#confirmPanier {
+    font-size: large;
+    font-weight: 900;
+    color: #fff;
+    background-color: #540606;
+    width: fit-content;
+    padding: 0.4em;
+    border-radius: 1em;
+    margin: 1em;
+    width: -webkit-fill-available;
+}
+
+/*---------confirmation---------*/
+
+#container-recapitulatif-commande h2 {
+    font-weight: bold;
+}
+
+.gras {
+    font-weight: bold;
+}
+
+#container-recapitulatif-commande {
+padding: 1em;
+}
+
+#montant {
+    font-size: large;
+    font-weight: 500;
+    color: #fff;
+    background-color: #540606;
+    width: fit-content;
+    padding: 0.4em;
+    border-radius: 1em;
+    margin: 1em;
+    width: -webkit-fill-available;
+    text-align: center;
+}
+
+#remerciment {
+    font-size: large;
+    font-weight: 500;
+    color: #fff;
+    background-color: #540606;
+    width: fit-content;
+    padding: 0.4em;
+    border-radius: 1em;
+    margin: 1em;
+    width: -webkit-fill-available;
+    text-align: center;
 }

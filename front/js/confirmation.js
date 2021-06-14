@@ -13,11 +13,10 @@ const positionElement = document.querySelector("#container-recapitulatif-command
 const structureConfirmationCommange = `
 <h2>Votre commande</h2>
     <div class="recapCommande">
-      <p>Merci pour votre commande</p>
       <p>Votre commande numéro : <span class="gras">${responseId}</span> a bien été pris en compte</p>
       <p id="montant">Toute l'équipe Orinoco vous remercie pour votre commande d'un montant total de : <span
           class="gras">${prixtotal}</span> Euros</p>
-      <p>Au plaisir de vous revoir</p>
+      <p id="remerciment">Au plaisir de vous revoir</p>
     </div>
 `;
 
