@@ -50,7 +50,8 @@ footer h4 {
     text-align: center;
     width: 100%;
     padding-top: 13px;
-    mix-blend-mode: overlay;
+    background-color: #faebd799;
+    padding: 0.3em;
   }
 
 .card div {
@@ -152,9 +153,6 @@ border-bottom:10px solid #540606;
     object-fit: cover;
 }
 
-.card-body {
-    width: 100%;
-}
 #formulaire_contact input {
     width: 100%;
 }
@@ -185,16 +183,38 @@ border-bottom:10px solid #540606;
     flex-wrap: nowrap;}
 
 #main_panier {
-    width: 100%;
+    width: 45%;
 }
 
-@media only screen and (min-width: 768) {
-    #main {
-        flex-wrap: wrap;
-    }   }
+.card-body {
+    width: 45%;
+}
+
+#main-container {
+    display: flex;
+    flex-wrap: wrap; 
+    padding: 1em;   
+} 
+
+@media only screen and (max-width: 1024px) {
+    #main-container {
+        display: inline;
+        padding: 0.2em;
+    } 
+    #main_panier {
+        width: 100%;
+    }
+    .card-body {
+        width: 100%;
+    }
+}
+
 /*---------confirmation---------*/
 
-#container-recapitulatif-commande h2 {
+#main_conf {
+    padding: 1em;
+}
+#main_conf h2 {
     font-weight: bold;
 }
 
