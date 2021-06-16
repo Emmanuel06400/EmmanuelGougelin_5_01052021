@@ -1,19 +1,20 @@
 let tableau = JSON.parse(localStorage.getItem("panier")); //Récupération du localstorage avec la key panier
 let priceTableau = [];//création d'un tableau vide
+let productsID = [];
 
 
 //Fonction pour récupérer le panier local storage + affichage
 function basket() {
     for (let i = 0; i < tableau.length; i++) {
-        GetAriclesBasket(tableau[i],i);
+        GetAriclesBasket(tableau[i], i);
     }
     totalPriceTeddy()
+    console.log(tableau)
 }
-
 basket()//Appel de la fonction
 
 //Fonction pour afficher le panier dans la page
-function GetAriclesBasket(line,i) {
+function GetAriclesBasket(line, i) {
     //Création des textNode
     var newName = document.createTextNode(line.name);
     var newPrice = document.createTextNode("Prix : " + line.price + " euros");
@@ -61,200 +62,128 @@ function GetAriclesBasket(line,i) {
 var totalPrice;
 function totalPriceTeddy() {
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    totalPrice = priceTableau.reduce(reducer); 
+    totalPrice = priceTableau.reduce(reducer);
     document.getElementById("montantTotal").insertAdjacentHTML("beforeend", totalPrice + " euros")
 }
 
-// FORMULAIRE DE COMMANDE///////////////////////////////
-const afichherFotmulaireHtml = () => {
-    //Sélection élément du DOM
-    const positionElement = document.querySelector("#containerFormulaire");
+localStorage.setItem("prixTotal",JSON.stringify(totalPrice));
 
-    const structureFormulaire = `
+//*****************Confirmation du panier et envoie des info au serveur****************/
 
-    <div id="formulaire_contact">
-                <form method="POST">
-                    <p><u>Coordonnées de livraison :</u> </p>
-                    <div>
-                        <label for="lastName">Nom : </label> <br>
-                        <input type="text" name="user_lastName" id="lastName" required>
-                    </div>
-                    <div>
-                        <label for="firstName" id="firstName_label">Prénom : </label> <br>
-                        <input type="text" name="user_firstName" id="firstName" required>
-                    </div>
-                    <div>
-                        <label for="email">Adresse e-mail : </label> <br>
-                        <input type="email" name="user_email" id="email" required>
-                    </div>
-                    <div>
-                        <label for="city">Ville : </label> <br>
-                        <input type="text" name="user_city" id="city" required>
-                    </div>
-                    <div>
-                        <label for="adress">Adresse : </label> <br>
-                        <input type="text" name="user_adress" id="adress" required>
-                    </div>
-                </form><br>
-                <button id="confirmPanier" type="submit" name="EnvoyerFormulaire">Commander</button>
-            </div>
-            `;
-//injection HTML
-    positionElement.insertAdjacentHTML("afterbegin", structureFormulaire);
-};
+// Fonction qui vérifie la valeur des champs si ils sont remplis correctement
+function checkIfField(input, regExp) {
+    return input.value.match(regExp) !== null;
+}
+// Fonction de confirmation, envoie le formulaire et l'id du produit
+function confirmationCommande() {
+    //Si la fonction a déjà été utilisée on réinitialise le formulaire
+    //suppr div
+    //suppr is-valid/is-invalid
+    let inputs = document.querySelectorAll("input");
+    for (let i = 0; i < inputs.length; i++) {
+        inputs[i].classList.remove("is-invalid");
+        inputs[i].classList.remove("is-valid");
 
-//Affichage du formulaire
-afichherFotmulaireHtml();
+    }
 
-//Sélection du bouton envoyer formulaire
-const btnEnvoyerFormulaire = document.querySelector("#confirmPanier");
-
-//--------------addEnventListener-------------//
-
-btnEnvoyerFormulaire.addEventListener("click", (e)=>{
-e.preventDefault();
-
-//Création : définition d'une classe pour fabriquer l'objet dans lequel iront les values du formulaire
-
-//Appel de l'instance de classe Formulaire pour créer l'objet formulaireValues
-const formulaireValues = {
-    lastName : document.querySelector("#lastName").value,
-    firstName : document.querySelector("#firstName").value,
-    email : document.querySelector("#email").value,
-    city : document.querySelector("#city").value,
-    address : document.querySelector("#adress").value,
+    let alertMessages = document.querySelectorAll(".alertMessages");
+    for (let i = 0; i < alertMessages.length; i++) {
+        alertMessages[i].remove();
     };
-console.log(formulaireValues)
 
-//********************Gestion validation du formulaire************** */
-const textAlert = (value) => {
-    return value + `${value} : Les chiffres et symboles ne sont pas autorisés \n Ne pas dépaser 20 caractères`;
+    //Récupérer les informations du formulaire
+    var firstName = document.querySelector("#firstName"),
+        lastName = document.querySelector("#lastName"),
+        address = document.querySelector("#address"),
+        city = document.querySelector("#city"),
+        email = document.querySelector("#email");
+
+    //Définition des expressions régulières pour la vérification de la validité des champs
+    let stringRegExp = /([A-Za-z0-9_\s\-'\u00C0-\u024F]+)/;
+    emailRegExp = /^([\w\-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})/i;
+
+    //Vérification de la validité des champs
+    let firstNameValidity = checkIfField(firstName, stringRegExp),
+        lastNameValidity = checkIfField(lastName, stringRegExp);
+        addressValidity = checkIfField(address, stringRegExp);
+        cityValidity = checkIfField(city, stringRegExp);
+        emailValidity = checkIfField(email, emailRegExp);
+
+    //Alerter l'utilisateur s'il a mal rempli le formulaire
+    let fields = [firstName, lastName, address, city, email],
+        fieldsValidity = [firstNameValidity, lastNameValidity, addressValidity, cityValidity, emailValidity],
+        fieldInvalid = false;
+
+    for (let i = 0; i < fields.length; i++) {
+        if (!fieldsValidity[i]) { //si un champ n'est pas valide
+            fieldInvalid = true; //un champ au moins est incorrect, sera utilisé plus loin pour empêcher la requête POST à l'API
+
+            //Création du message à envoyer à l'utilisateur
+            let message;
+            if (fields[i] === document.querySelector("#firstName")) {
+                message = "Le prénom est incorrect !";
+            } else if (fields[i] === document.querySelector("#lastName")) {
+                message = "Le nom est incorrect !";
+            } else if (fields[i] === document.querySelector("#address")) {
+                message = "L'adresse postale est incorrecte !";
+            } else if (fields[i] === document.querySelector("#city")) {
+                message = "La ville est incorrecte !";
+            } else {
+                message = "L'adresse mail est incorrecte !";
+            }
+
+            //Création et stylisation de l'alerte
+            let alert = document.createElement("div");
+            alert.appendChild(document.createTextNode(message));
+            fields[i].classList.add("is-invalid");
+            alert.classList.add("alertMessages", "invalid-feedback");
+            fields[i].parentElement.appendChild(alert);
+
+        } else {
+            fields[i].classList.add("is-valid");
+        }
+    }
+    //Si l'un des champs n'est pas valide
+    if (fieldInvalid) return; //la fonction s'arrête 
+    //sinon elle continue
+
+    //Les entrer les champs dans un objet
+    let contact = {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value
+    },
+        products = productsID;
+
+    //Récupérer l'orderId
+    fetch('http://localhost:3000/api/teddies/order', {
+        method: 'post',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            contact, products
+        })
+    })
+        .then(response => response.json())
+        .then(order => {
+            localStorage.setItem("orderId", order.orderId);
+            window.location.href = "confirmation.html";
+        })
 }
 
-const regExNameFirstnameCity = (value) => {
-return /^[A-Za-z]{3,20}$/.test(value)
-};
-
-const regExEmail = (value) => {
-    return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
-    };
-
-
-function nomControle(){
-//Contrôle de la validité du nom
-const leNom = formulaireValues.lastName;
-if(regExNameFirstnameCity(leNom)){
-return true;
-}else{
-    alert(textAlert("Nom"))
-    return false;
-    };
-};
-function prenomControle(){
-    //Contrôle de la validité du prenom
-    const lePrenom = formulaireValues.firstName;
-    if(regExNameFirstnameCity(lePrenom)){
-    return true;
-    }else{
-        alert(textAlert("Prénom"))
-        return false;
-        };
-    };
-function villeControle(){
-    //Contrôle de la validité du ville
-    const laVille = formulaireValues.city;
-    if(regExNameFirstnameCity(laVille)){
-    return true;
-    }else{
-        alert(textAlert("Ville"))
-        return false;
-        };
-    };
-/*function emailControle(){
-    //Contrôle de la validité du email
-    const leEmail = formulaireValues.adress;
-    if(regExEmail(leEmail)){
-    return true;
-    }else{
-        alert("l'email n'est pas valide")
-        return false;
-        };
-    };*/
-
-//Contrôle la validité avant envoir au local storage
-if(nomControle() && prenomControle() && villeControle()){
-    //Mettre l'objet "formulaireValues" dans le localStorage
-    localStorage.setItem("formulaireValues",JSON.stringify(formulaireValues));
-    localStorage.setItem("prixTotal",JSON.stringify(totalPrice));
-    } else{
-        alert("Veuillez bien remplir le formulaire");
-    };
-
-//********************FIN Gestion validation du formulaire************** */
-
-//Mettre les values du formulaire et les produits sélectionnés dans un objets à envoyer vers le serveur
-const aEnvoyer = {
-    products: tableau,
-    contact: formulaireValues
-}
-console.log(aEnvoyer);
-
-envoieVersServeur(aEnvoyer);
-});
-
-//--------------fin addEnventListener-------------//
-
-function envoieVersServeur(aEnvoyer){
-    //Envoie de l'objet "aEnvoyer" vers le serveur
-const promise01 = fetch("http://localhost:3000/api/teddies/order", { //"http://localhost:3000/api/teddies/order"
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify(aEnvoyer),
-});
-
-//Pour voir le resultat du serveur dans la console ( A verifier )
-promise01.then(async(response)=>{
-//Si la promesse n'est pas résolu, est rejeté, Gestions des erreurs
-try{
-    const contenu = await response.json();
-    console.log(contenu);
-
-    if(response.ok) {
-        console.log(`Resultat de response.ok : ${response.ok}`);
-
-        //Récupération de l'id de la response du serveur
-        console.log(contenu._id);
-        //Mettre l'id dans le local storage
-        localStorage.setItem("responseId", contenu._id);
-
-        //Aller vers la page contirmation.html
-        window.location = "confirmation.html";
-
-    } else{
-        console.log(`Resultat du serveur : ${response.status}`);
-        alert(`Problème avec le serveur : erreur ${response.status}`)
-    };
-
-}catch(e){
-    console.log(e);
-    console.log("erreur qui vient du catche");
-    console.log(e);
-    alert(`ERREUR qui vient du catch() ${e} `);
-};
-});
-}
-
-
+document.querySelector("#confirmPanier").addEventListener("click", confirmationCommande, false);
+/*
 //-------------Mettre le contenu du localStorage dans les champs du formulaire----------------//
 //Prendre la key dans le localStorage et la mettre dans une variable
 const dataLocalStorage = localStorage.getItem("formulaireValues")
 
 //Convertir la chaîne de caractère en objet javascript
-const dataLocalStorageObjet = JSON.parse(dataLocalStorage);
+const dataLocalStorageObjet = JSON.parse("panier",);
 
 //Fonction pour que le chanmp du formulaire soit remplipar les données du loca storage si elle existe
 function remplirChampInputDepuisLocalStorage(input){
-    document.querySelector(`#${input}`).value = dataLocalStorageObjet[input];
+    document.querySelector("input").value = dataLocalStorageObjet[input];
 };
 
 remplirChampInputDepuisLocalStorage("lastName");
@@ -266,53 +195,6 @@ remplirChampInputDepuisLocalStorage("adress");
 console.log(dataLocalStorageObjet);
 
 
-
-
-
-
-
-
-
-
-
-
-
-        /*
-
-        
-        //Création de la donnée à envoyer au back-end
-        const url = 'http://localhost:3000/api/teddies/order';
-
-        let data = {
-            contact: {
-                firstName: document.getElementById("firstName").value,
-                lastName: document.getElementById("lastName").value,
-                address: document.getElementById("address").value,
-                city: document.getElementById("city").value,
-                email: document.getElementById("email").value
-            },
-            products: produit
-        }
-
-        //Requête POST pour envoyer la donnée au back-end
-        var request = new Request(url, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json; charset=UTF-8" }
-        });
-
-        fetch(request)
-            .then(function(response) {
-                var myJSON_promise = response.json();
-                myJSON_promise.then(function(myJSON) {
-                    var validation = [myJSON.orderId, totalPrice]
-                    localStorage.setItem("validation", JSON.stringify(validation))  //Enregistre l'orderID dans un localStorage
-                })
-            })
-            .then(setTimeout(function() { window.location.href = "confirmation.html" }, 1000)) //Ouvre la page de confirmation après 1 seconde
-    }
-}
-
+   localStorage.setItem("formulaireValues",JSON.stringify(formulaireValues));
 
 */
-

@@ -1,7 +1,4 @@
 
-//appel de la fonction 
-getArticles()
-
 //Fonction pour récupérer les articles dans le server
 function getArticles() { //appel api, callback, ... return une promesse
     return fetch("http://localhost:3000/api/teddies/")
@@ -10,7 +7,7 @@ function getArticles() { //appel api, callback, ... return une promesse
             return myJSON_promise
         })
         .then(function(myJSON) {//J'emboite les fonctions avec la méthode .then
-            showArticles(myJSON)
+            showArticles(myJSON)//Appel de la fonction qui structure la page HTML avec les information récupérer
             console.log(myJSON)
             }
         )
@@ -19,9 +16,13 @@ function getArticles() { //appel api, callback, ... return une promesse
         })
 }
 
+//appel de la fonction 
+getArticles()
+
+
 //Fonction pour structurer la page html
 function showArticles(myJSON) {
-    for (let i = 0; i < myJSON.length; i++) { //Avec une boucle for je créé une structure HTML etj'affiche les teddys 
+    for (let i = 0; i < myJSON.length; i++) { //Avec une boucle for je créé une structure HTML et j'affiche les teddys 
 
                 let linkTeddy = document.createElement('a');//lien vers le produit
                 linkTeddy.classList.add('linkTeddy');//ajout de class 
@@ -48,6 +49,7 @@ function showArticles(myJSON) {
                 priceTeddy.classList.add('prix',"card-text","fondBlanc",".card-body");
                 priceTeddy.textContent = myJSON[i].price/100 + ' Euros';
 
+                //Imbrication des éléments dans leurs div parents
                 boxImg.appendChild(imgTeddy);
                 boxFeatureTeddy.appendChild(nameTeddy);
                 boxFeatureTeddy.appendChild(priceTeddy);

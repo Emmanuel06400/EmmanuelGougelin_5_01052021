@@ -152,6 +152,9 @@ border-bottom:10px solid #540606;
     object-fit: cover;
 }
 
+.card-body {
+    width: 100%;
+}
 #formulaire_contact input {
     width: 100%;
 }
@@ -177,6 +180,18 @@ border-bottom:10px solid #540606;
     width: -webkit-fill-available;
 }
 
+#main {
+    display: flex;
+    flex-wrap: nowrap;}
+
+#main_panier {
+    width: 100%;
+}
+
+@media only screen and (min-width: 768) {
+    #main {
+        flex-wrap: wrap;
+    }   }
 /*---------confirmation---------*/
 
 #container-recapitulatif-commande h2 {

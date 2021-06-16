@@ -12,6 +12,7 @@ function $_GET(param) {
 		return vars[param] ? vars[param] : null;	
 	}
 	return vars;
+    
 }
 
 // Fonction pour récuperer les articles via leurs id
@@ -34,15 +35,15 @@ function showArticlesSelected(myJSON) {
         document.getElementById("image_produit").setAttribute("src", image_teddy);
         document.getElementById("desc_produit").appendChild(description_teddy);
 
-        let nb_colors = myJSON.colors;
+        let nb_colors = myJSON.colors; 
         for (let j = 0; j < nb_colors.length; j++) { //Avec une boucle, je repète l'opération en fonction du nombre de couleurs du teddy 
-            let newOption = document.createElement("option");//je créé une variable qui génère l'élément option
+            let newOption = document.createElement("option");//Création de l'élément option
             let afficherCouleur = document.createTextNode(myJSON.colors[j]);//je créé une variable pour afficher les couleurs
             document.getElementById("couleur").appendChild(newOption).setAttribute("id", "color" + j);// A partir d'une id HTML, j'enfante la variable créé précedemment
             document.getElementById("color" + j).setAttribute("value", j)// A partir d'une id HTML, je rajoute une attribut
             document.getElementById("color" + j).appendChild(afficherCouleur);
             if (j === 0) {
-            document.getElementById("color" + j).selected = true;
+            document.getElementById("color" + j).selected = true;//Si aucune sélection la couleur est la première par defaut
             }
         }
 }
@@ -53,9 +54,8 @@ function showArticlesSelected(myJSON) {
 
   //Fonction ajouté un nouvel article dans le panier
   function addNewArticle(myJSON) {
-    let teddyCouleur = document.getElementById('couleur').value; //Je créé une variable pour récupérer la couleur
-    let tableau = []
-    tableau = JSON.parse(localStorage.getItem("panier")) || []; //Avec la methode .parse je transforme une chaine json en objet jvscrit et je Créé d'un tableau avec la key panier 
+    let teddyCouleur = document.getElementById('couleur').value; //Je récupére la couleur
+    let tableau = JSON.parse(localStorage.getItem("panier")) || []; // Je récupère le panier OU je creer un tableau 
 
     let nouvelArticle = new Object() //Création de l'objet teddy selon les paramètres du teddy de la page
     nouvelArticle.name = myJSON.name;
@@ -73,6 +73,7 @@ function showArticlesSelected(myJSON) {
             localStorage.setItem("panier", JSON.stringify(tableau));//envoie les données en .json avec la methode stringify au local storage
         }
     });
+    
     if (ajoutArticle) { //Si le teddy n'existe pas dans le panier, ajout du teddy dans localstorage
         tableau.push(nouvelArticle);
         localStorage.setItem("panier", JSON.stringify(tableau));
@@ -92,3 +93,4 @@ document.getElementById("btn_ajout_panier").onclick = function() {
             addNewArticle(myJSON)
         })
 };
+console.log(getArticlesWithId())
